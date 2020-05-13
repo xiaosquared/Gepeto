@@ -10,7 +10,7 @@ public class Gepeto extends PApplet {
 	String filename = "Yang1_declaration11";
 	SpeechSegment s;
 	
-	
+	PitchTier pt;
 
 	public void settings() {
 		size(600, 400);
@@ -21,7 +21,8 @@ public class Gepeto extends PApplet {
 		
 		s = new SpeechSegment(filename, m, this);
 
-		background(50);		
+		pt = new PitchTier("data/"+filename+"_styl.PitchTier", true);	
+		pt.print();
 	}
 
 	public void draw() {
@@ -30,17 +31,6 @@ public class Gepeto extends PApplet {
 	}
 	
 	public void keyPressed() {
-//		if (key == '1') {
-//			println(key);
-//			s.setPlaybackInterval(1);
-//		} else if (key == '2') {
-//			println(key);
-//			s.setPlaybackInterval(2);
-//		} else if (key == '3') {
-//			println(key);
-//			s.setPlaybackInterval(3); 
-//		} 
-		println("play");
 		s.playInterval();
 	}
 	

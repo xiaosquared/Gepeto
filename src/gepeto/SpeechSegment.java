@@ -32,7 +32,6 @@ public class SpeechSegment {
 		
 		width = parent.width;
 		y = parent.height - 52;
-		duration = a.length()/1000;
 		
 		// extract data from TextGrid into an ArrayList of intervals
 		intervals = new ArrayList<SpeechInterval>();
@@ -95,6 +94,6 @@ public class SpeechSegment {
 	
 	
 	private int getIntervalX(double time) {
-		return (int) (width/duration * time);
+		return (int) (width/tg.getDuration() * time);
 	}
 }
