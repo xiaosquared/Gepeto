@@ -16,20 +16,22 @@ public class SpeechSegment {
 	ArrayList<SpeechInterval> intervals;
 	int selected_interval_id = -1;
 	
-	
-	double duration;
+	PitchTier pt;
+	SemitoneGraph graph;
 	
 	int y;
 	int width;
 	int height = 50;
 	
-	public SpeechSegment(String filename, Minim m, PApplet parent) {
+	public SpeechSegment(String filename, Minim m, SemitoneGraph graph, PApplet parent) {
 		this.parent = parent;
 		this.m = m;
 		
 		tg = new TextGrid("data/"+filename +".TextGrid");
 		a = m.loadFile("data/"+filename+".wav", 1024);
+		pt = new PitchTier("data/"+filename +"_styl.PitchTier");
 		
+		this.graph = graph;
 		width = parent.width;
 		y = parent.height - 52;
 		
@@ -38,8 +40,10 @@ public class SpeechSegment {
 		String[] labels = tg.getLabels(1);
 		double[][] times = tg.getTimes(1);
 		for (int i = 0; i < labels.length; i++) {
-			SpeechInterval my_interval = new SpeechInterval(labels[i], (int) (times[i][0]*1000), (int) (times[i][1]*1000),
-															getIntervalX(times[i][0]), getIntervalX(times[i][1])); 
+			double start_time = times[i][0]*1000;
+			double end_time = times[i][1]*1000;
+			SpeechInterval my_interval = new SpeechInterval(labels[i], (int) start_time, (int) end_time,
+															timeToX(start_time), timeToX(end_time)); 
 			intervals.add(my_interval);		
 		}
 	}
@@ -49,6 +53,7 @@ public class SpeechSegment {
 			return;
 		SpeechInterval my_interval = intervals.get(id);
 		a.setLoopPoints(my_interval.getStartTime(), my_interval.getEndTime());
+		a.cue(my_interval.getStartTime());
 	}
 	
 	public void playInterval() {
@@ -57,6 +62,38 @@ public class SpeechSegment {
 	
 	// Just draw tier 1 for now
 	public void draw() {
+		drawTextGrid();
+		drawPitchTier();
+		
+		
+		parent.stroke(255);
+		parent.strokeWeight(1);
+		float cursor_x = timeToX(a.position()) + graph.getX();
+		parent.line(cursor_x, graph.getY(), cursor_x, graph.getMaxY());
+	}
+	
+	private void drawPitchTier() {
+		parent.fill(255, 100, 100);
+		parent.stroke(255, 100, 100);
+		
+		PVector[] points = pt.getPoints();
+		PVector last_xy = null;
+		for (int i = 0; i < points.length; i++) {
+			PVector xy = new PVector(timeToX(points[i].x), graph.midiToY(points[i].y));
+			
+			parent.strokeWeight(4);
+			parent.ellipse(xy.x, xy.y, 5, 5);
+			
+			if (last_xy != null) {
+				parent.strokeWeight(3);
+				parent.line(last_xy.x, last_xy.y, xy.x, xy.y);
+			}
+			
+			last_xy = xy;
+		}
+	}
+	
+	private void drawTextGrid() {
 		parent.stroke(0, 0, 0);
 		parent.strokeWeight(1);
 		for (int i = 0; i < intervals.size(); i++) {
@@ -80,8 +117,10 @@ public class SpeechSegment {
 	}
 	
 	public void selectIntervalFromMouse(int mouseX, int mouseY) {
-		if (mouseY < y || mouseY > y+height)
+		if (mouseY < y || mouseY > y+height) {
+			selected_interval_id = -1;
 			return;
+		}
 		for (int i = 0; i < intervals.size(); i++) {
 			SpeechInterval my_interval = intervals.get(i);
 			if (mouseX >= my_interval.getStartX() && mouseX <= my_interval.getEndX()) {
@@ -93,7 +132,7 @@ public class SpeechSegment {
 	
 	
 	
-	private int getIntervalX(double time) {
-		return (int) (width/tg.getDuration() * time);
+	private int timeToX(double time) {
+		return (int) (width/(double)a.length() * time);
 	}
 }

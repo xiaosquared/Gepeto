@@ -72,12 +72,16 @@ public class PitchTier {
         return this.getEndTime()-this.getStartTime();
     }
 	
+    public PVector[] getPoints() {
+    	return points;
+    }
+    
     public void print() {
     	for (int i = 0; i < points.length; i++) {
     		System.out.println("time (millis): " + points[i].x + ", freq: " + points[i].y);
     	}
     }
-    
+
 	  /**
      * Adapted from code by Nicolas Audibert
      * Attempts to detect the text encoding scheme used in a .TextGrid file

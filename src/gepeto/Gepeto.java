@@ -10,24 +10,25 @@ public class Gepeto extends PApplet {
 	String filename = "Yang1_declaration11";
 	SpeechSegment s;
 	
-	PitchTier pt;
+	SemitoneGraph stg;
 
 	public void settings() {
-		size(600, 400);
+		size(800, 600);
 	}
 	
 	public void setup() {
 		textAlign(PApplet.CENTER, PApplet.CENTER);
 		
-		s = new SpeechSegment(filename, m, this);
+		stg = new SemitoneGraph(0, 50, width, height-150);
+		s = new SpeechSegment(filename, m, stg, this);
 
-		pt = new PitchTier("data/"+filename+"_styl.PitchTier", true);	
-		pt.print();
+		
 	}
 
 	public void draw() {
 		background(50);
 		s.draw();
+		stg.draw(this);
 	}
 	
 	public void keyPressed() {
@@ -35,8 +36,7 @@ public class Gepeto extends PApplet {
 	}
 	
 	public void mousePressed() {
-		//println(mouseX + ", " + mouseY);
-		s.selectIntervalFromMouse(mouseX, mouseY);;
+		s.selectIntervalFromMouse(mouseX, mouseY);
 	}
 	
 	public static void main(String _args[]) {
