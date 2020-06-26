@@ -2,3 +2,5 @@
 *.wav
 *.TextGrid
 *.PitchTier
+*analysis.jxf.jit
+*f0.jxf.jit

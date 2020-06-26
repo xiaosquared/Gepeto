@@ -94,6 +94,7 @@
 	<classpathentry kind="lib" path="lib/user/minim/tritonus_share.jar"/>
 	<classpathentry kind="lib" path="lib/user/TextGrids.jar"/>
 	<classpathentry kind="lib" path="lib/user/oscP5.jar"/>
+	<classpathentry kind="lib" path="lib/user/controlP5.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

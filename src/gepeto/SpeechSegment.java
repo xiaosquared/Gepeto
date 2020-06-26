@@ -11,6 +11,7 @@ public class SpeechSegment {
 	PApplet parent;
 	Minim m;
 	
+	String filename;
 	TextGrid tg;
 	AudioPlayer a;
 	ArrayList<SpeechInterval> intervals;
@@ -26,6 +27,8 @@ public class SpeechSegment {
 	public SpeechSegment(String filename, Minim m, SemitoneGraph graph, PApplet parent) {
 		this.parent = parent;
 		this.m = m;
+		
+		this.filename = filename;
 		
 		tg = new TextGrid("data/"+filename +".TextGrid");
 		a = m.loadFile("data/"+filename+".wav", 1024);
@@ -46,6 +49,10 @@ public class SpeechSegment {
 															timeToX(start_time), timeToX(end_time)); 
 			intervals.add(my_interval);		
 		}
+	}
+	
+	public String getFilename() {
+		return filename;
 	}
 	
 	public void setPlaybackInterval(int id) {
@@ -130,6 +137,13 @@ public class SpeechSegment {
 		}
 	}
 	
+	public float getScrubPosition(float mouseX) {
+		PVector[] points = pt.getPoints();
+		float start_x = timeToX(points[0].x);
+		float end_x = timeToX(points[points.length-1].x);
+		//return (mouseX-start_x)/(width);
+		return (mouseX-start_x)/(end_x - start_x);
+	}
 	
 	
 	private int timeToX(double time) {

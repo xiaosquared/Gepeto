@@ -20,12 +20,24 @@ public class OSCSender {
 		sendMsg("/pitch", pitch);
 	}
 	
+	public void sendScrub(float scrub) {
+		sendMsg("/scrub", scrub);
+	}
+	
 	public void sendVocalEffort(float effort) {
 		sendMsg("/effort", effort);
 	}
 	
-	public void sendReset() {
-		sendMsg("/reset", true);
+	public void sendRestart() {
+		sendMsg("/restart", true);
+	}
+	
+	public void sendAnalysis(String filename) {
+		sendMsg("/analysis", filename);
+	}
+	
+	public void sendLabeling(String filename) {
+		sendMsg("/labeling", filename);
 	}
 	
 	/* 
@@ -38,6 +50,20 @@ public class OSCSender {
 		}
 	}
 	
+	public void sendScrubMode() {
+		sendMsg("/rhythmMode", "scrub");
+	}
+	
+	public void sendBinaryMode() {
+		sendMsg("/rhythmMode", "binary");
+		sendMsg("/articulationSpeed", 1);
+	}
+	
+	public void sendParabolicMode() {
+		sendMsg("/rhythmMode", "parabolic");
+		sendMsg("/articulationSpeed", 0.5f);
+	}
+	
 	private void sendMsg(String type, float value) {
 		OscMessage msg = new OscMessage(type);
 		msg.add(value);
@@ -45,6 +71,12 @@ public class OSCSender {
 	}
 	
 	private void sendMsg(String type, boolean value) {
+		OscMessage msg = new OscMessage(type);
+		msg.add(value);
+		oscP5.send(msg,dest);
+	}
+	
+	private void sendMsg(String type, String value) {
 		OscMessage msg = new OscMessage(type);
 		msg.add(value);
 		oscP5.send(msg,dest);
